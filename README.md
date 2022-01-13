@@ -1,1 +1,1 @@
-# aws-sns-subscrube-https-go
+# Subscribe the HTTP/S endpoint to the Amazon SNS topic
