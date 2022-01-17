@@ -23,6 +23,7 @@ var (
 	ErrInvalidCertURL          = errors.New("error invalidate cert url")
 	ErrInvalidCertURLSchema    = errors.New("error invalidate cert url scheme")
 	ErrInvalidCertURLHost      = errors.New("error invalidate cert url host")
+	ErrInvalidCertBody         = errors.New("error invalidate cert body")
 	ErrInvalidSignatureVersion = errors.New("error invalid signature version")
 	ErrInvalidSignature        = errors.New("error invalid signature")
 )
@@ -83,7 +84,7 @@ func CheckSignature(ms MessageSignature) error {
 
 	p, _ := pem.Decode(body)
 	if p == nil {
-		return err
+		return ErrInvalidCertBody
 	}
 
 	cert, err := x509.ParseCertificate(p.Bytes)
