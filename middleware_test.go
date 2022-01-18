@@ -13,6 +13,14 @@ import (
 )
 
 func TestMiddleware(t *testing.T) {
+	signingCertHostRegexp = regexp.MustCompile("")
+	signingCertURLSchema = "http"
+
+	t.Cleanup(func() {
+		signingCertHostRegexp = regexp.MustCompile(`^sns\.[a-zA-Z0-9\-]{3,}\.amazonaws\.com(\.cn)?$`)
+		signingCertURLSchema = "https"
+	})
+
 	tests := []struct {
 		name           string
 		topicARN       string
@@ -66,16 +74,12 @@ func TestMiddleware(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			t.Parallel()
-
 			srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 				fmt.Fprintf(w, tt.certificate)
 			}))
 			defer srv.Close()
 
 			tt.body["SigningCertURL"] = srv.URL
-			signingCertHostRegexp = regexp.MustCompile("")
-			signingCertURLSchema = "http"
 
 			handler := func(w http.ResponseWriter, r *http.Request) {
 				w.WriteHeader(http.StatusOK)

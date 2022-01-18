@@ -9,8 +9,6 @@ import (
 )
 
 func TestConfirmSubscription(t *testing.T) {
-	t.Parallel()
-
 	tests := map[string]struct {
 		msg     SubscriptionConfirmation
 		handler func(w http.ResponseWriter, r *http.Request)

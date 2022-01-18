@@ -20,10 +20,10 @@ var (
 
 var (
 	ErrConfirmSubscription     = errors.New("error confirm subscription")
-	ErrInvalidCertURL          = errors.New("error invalidate cert url")
-	ErrInvalidCertURLSchema    = errors.New("error invalidate cert url scheme")
-	ErrInvalidCertURLHost      = errors.New("error invalidate cert url host")
-	ErrInvalidCertBody         = errors.New("error invalidate cert body")
+	ErrInvalidCertURL          = errors.New("error invalid cert url")
+	ErrInvalidCertURLSchema    = errors.New("error invalid cert url scheme")
+	ErrInvalidCertURLHost      = errors.New("error invalid cert url host")
+	ErrInvalidCertBody         = errors.New("error invalid cert body")
 	ErrInvalidSignatureVersion = errors.New("error invalid signature version")
 	ErrInvalidSignature        = errors.New("error invalid signature")
 )
