@@ -240,6 +240,29 @@ func TestCheckSignature(t *testing.T) {
 			}, "\n"),
 			want: ErrInvalidSignature,
 		},
+		"invalid certificate body": {
+			sig: MessageSignature{
+				Signed: []byte(strings.Join([]string{
+					"Message",
+					"Invalid message", // invalid
+					"MessageId",
+					"22b80b92-fdea-4c2c-8f9d-bdfb0c7bf324",
+					"Subject",
+					"My First Message",
+					"Timestamp",
+					"2012-05-02T00:54:06.655Z",
+					"TopicArn",
+					"arn:aws:sns:us-west-2:123456789012:MyTopic",
+					"Type",
+					"Notification\n",
+				}, "\n")),
+				SignatureVersion: "1",
+				Signature:        "cwMmnINV7NWn5wb4o1faQx9QZBOEpSaJaA86Asdkrpr9C0rdkI/RnyUNl5DrqmueaCiCImuy4Jh0CNeOzqXEdv6WuBjUPbQT/YyAb1h00VVqvjyOvsl2kq+7B3bTfNEahHFZJS2Xh0AtwtWENt159iNnlIRD5NSeVlRyicVv2mgCgK9qxLGGyOFESk43sqUnx5abr0mDR2oFRgbWgwHOly3bQjoaXCfrFYXbmEpz9mMScxoOcRgAUqGVkNLzNBDPU4d9OiBwHxifZBfA6AB3ZxoLm/IZXQJCoK7g44O3NjBCC5nnaMDnHJm1TeSqwVXx8MQQ+8LHhcLbghKkPvo33g==",
+				SigningCertURL:   "https://sns.us-west-2.amazonaws.com/SimpleNotificationService-f3ecfb7224c7233fe7bb5f59f96de52f.pem",
+			},
+			certificate: "",
+			want:        ErrInvalidCertBody,
+		},
 	}
 	for name, tt := range tests {
 		tt := tt
