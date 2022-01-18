@@ -10,4 +10,3 @@ TopicArn
 arn:aws:sns:us-west-2:123456789012:MyTopic
 Type
 Notification
-
