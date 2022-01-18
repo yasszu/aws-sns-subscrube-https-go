@@ -37,12 +37,13 @@ func Middleware(snsTopicARN string) func(http.Handler) http.Handler {
 					http.Error(w, err.Error(), http.StatusForbidden)
 					return
 				}
-				if _, err := ConfirmSubscription(msg); err != nil {
+				body, err := ConfirmSubscription(msg)
+				if err != nil {
 					http.Error(w, err.Error(), http.StatusForbidden)
 					return
 				}
 				w.WriteHeader(http.StatusOK)
-				fmt.Fprintln(w, "confirmed subscription successfully")
+				fmt.Fprintln(w, body)
 				return
 			case MessageTypeNotification:
 				var msg Notification

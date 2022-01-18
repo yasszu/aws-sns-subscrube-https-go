@@ -92,7 +92,6 @@ func TestMiddleware(t *testing.T) {
 			h.ServeHTTP(w, req)
 
 			resp := w.Result()
-
 			if resp.StatusCode != tt.wantStatusCode {
 				body, err := ioutil.ReadAll(resp.Body)
 				if err != nil {
