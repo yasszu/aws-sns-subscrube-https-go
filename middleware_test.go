@@ -12,7 +12,7 @@ import (
 	"testing"
 )
 
-func TestMiddleware(t *testing.T) {
+func prepare(t *testing.T) {
 	signingCertHostRegexp = regexp.MustCompile("")
 	signingCertURLSchema = "http"
 
@@ -20,6 +20,10 @@ func TestMiddleware(t *testing.T) {
 		signingCertHostRegexp = regexp.MustCompile(`^sns\.[a-zA-Z0-9\-]{3,}\.amazonaws\.com(\.cn)?$`)
 		signingCertURLSchema = "https"
 	})
+}
+
+func TestMiddleware(t *testing.T) {
+	prepare(t)
 
 	tests := []struct {
 		name           string
