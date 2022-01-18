@@ -1,0 +1,13 @@
+Message
+Hello world!
+MessageId
+22b80b92-fdea-4c2c-8f9d-bdfb0c7bf324
+Subject
+My First Message
+Timestamp
+2012-05-02T00:54:06.655Z
+TopicArn
+arn:aws:sns:us-west-2:123456789012:MyTopic
+Type
+Notification
+

@@ -1,0 +1,14 @@
+Message
+You have chosen to subscribe to the topic arn:aws:sns:us-west-2:123456789012:MyTopic.\nTo confirm the subscription, visit the SubscribeURL included in this message.
+MessageId
+165545c9-2a5c-472c-8df2-7ff2be2b3b1b
+SubscribeURL
+https://sns.us-west-2.amazonaws.com/?Action=ConfirmSubscription&TopicArn=arn:aws:sns:us-west-2:123456789012:MyTopic&Token=Ethevee8dae4mie3
+Timestamp
+2012-04-26T20:45:04.751Z
+Token
+Ethevee8dae4mie3
+TopicArn
+arn:aws:sns:us-west-2:123456789012:MyTopic
+Type
+SubscriptionConfirmation
