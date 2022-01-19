@@ -22,7 +22,7 @@ func prepare(t *testing.T) {
 	})
 }
 
-func TestMiddleware(t *testing.T) {
+func TestMiddleware_Notification(t *testing.T) {
 	prepare(t)
 
 	tests := []struct {
@@ -34,7 +34,7 @@ func TestMiddleware(t *testing.T) {
 		wantStatusCode int
 	}{
 		{
-			name:        "Notification",
+			name:        "Success",
 			topicARN:    "arn:aws:sns:us-west-2:123456789012:MyTopic",
 			messageType: "Notification",
 			body: map[string]interface{}{
@@ -111,7 +111,7 @@ func TestMiddleware(t *testing.T) {
 				}
 				resp.Body.Close()
 
-				t.Errorf("Middleware() = %v, want %v: %s", resp.StatusCode, tt.wantStatusCode, string(body))
+				t.Errorf("Middleware() = %v: %s, want %v", resp.StatusCode, string(body), tt.wantStatusCode)
 			}
 		})
 	}
