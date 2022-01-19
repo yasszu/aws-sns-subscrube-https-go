@@ -35,17 +35,19 @@ func TestMiddleware(t *testing.T) {
 	}{
 		{
 			name:        "Notification",
-			topicARN:    "arn:aws:sns:ap-northeast-1:000000000000:topic-01",
+			topicARN:    "arn:aws:sns:us-west-2:123456789012:MyTopic",
 			messageType: "Notification",
 			body: map[string]interface{}{
 				"Type":             "Notification",
-				"MessageId":        "2e41209f-2772-4a8d-8014-ed1fc296499d",
-				"TopicArn":         "arn:aws:sns:ap-northeast-1:000000000000:topic-01",
-				"Message":          "test",
-				"Timestamp":        "2021-12-17T02:28:11.491Z",
+				"MessageId":        "22b80b92-fdea-4c2c-8f9d-bdfb0c7bf324",
+				"TopicArn":         "arn:aws:sns:us-west-2:123456789012:MyTopic",
+				"Subject":          "My First Message",
+				"Message":          "Hello world!",
+				"Timestamp":        "2012-05-02T00:54:06.655Z",
 				"SignatureVersion": "1",
-				"Signature":        "HpJZNo/GIQHutIh3X8KWie9y5cE97WS6/dI4zzaZJd/mneFhCgg9m7QlSDFgvtCF253TefIsnydNxfGH3gQ5HcPsWHfeNDukhDVe86i4tjz/sBl4hbS7BLj9MMP5+6x/XaNaB/xbgQp2AdP6BJRxsGZlbnvZwNJUoOjMPjdZaIAvSle04LRarWmc6xFZBv4JSJ7w9nK8a6I2bg56oR35dpOv4GyDQbSuIohxikoNs9OFqTlUi3TxK0pDZE8CyTQG5KW10SIHrG7FWWBc3KVYujfUi7UbFbYLhMQVMG6yfcUrZmbyQyz3uZF3KEiRDkj8yOPVdLasvPXW/th3mGuudg==",
-				"SigningCertURL":   "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-0000000000000000000000.pem",
+				"Signature":        "cwMmnINV7NWn5wb4o1faQx9QZBOEpSaJaA86Asdkrpr9C0rdkI/RnyUNl5DrqmueaCiCImuy4Jh0CNeOzqXEdv6WuBjUPbQT/YyAb1h00VVqvjyOvsl2kq+7B3bTfNEahHFZJS2Xh0AtwtWENt159iNnlIRD5NSeVlRyicVv2mgCgK9qxLGGyOFESk43sqUnx5abr0mDR2oFRgbWgwHOly3bQjoaXCfrFYXbmEpz9mMScxoOcRgAUqGVkNLzNBDPU4d9OiBwHxifZBfA6AB3ZxoLm/IZXQJCoK7g44O3NjBCC5nnaMDnHJm1TeSqwVXx8MQQ+8LHhcLbghKkPvo33g==",
+				"SigningCertURL":   "https://sns.us-west-2.amazonaws.com/SimpleNotificationService-f3ecfb7224c7233fe7bb5f59f96de52f.pem",
+				"UnsubscribeURL":   "https://sns.us-west-2.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-west-2:123456789012:MyTopic:c9135db0-26c4-47ec-8998-413945fb5a96",
 			},
 			certificate: strings.Join([]string{
 				"-----BEGIN CERTIFICATE-----",
@@ -78,6 +80,8 @@ func TestMiddleware(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
 			srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 				fmt.Fprintf(w, tt.certificate)
 			}))
