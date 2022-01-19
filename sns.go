@@ -28,7 +28,13 @@ var (
 	ErrInvalidSignature        = errors.New("error invalid signature")
 )
 
-func ConfirmSubscription(msg SubscriptionConfirmation) (string, error) {
+type Client struct{}
+
+func NewClient() *Client {
+	return &Client{}
+}
+
+func (s *Client) ConfirmSubscription(msg SubscriptionConfirmation) (string, error) {
 	resp, err := http.Get(msg.SubscribeURL)
 	if err != nil {
 		return "", err
@@ -47,7 +53,7 @@ func ConfirmSubscription(msg SubscriptionConfirmation) (string, error) {
 	return string(body), nil
 }
 
-func ValidateCertURL(certURL string) error {
+func (s *Client) ValidateCertURL(certURL string) error {
 	u, err := url.Parse(certURL)
 	if err != nil {
 		return ErrInvalidCertURL
@@ -61,7 +67,7 @@ func ValidateCertURL(certURL string) error {
 	return nil
 }
 
-func CheckSignature(ms MessageSignature) error {
+func (s *Client) CheckSignature(ms MessageSignature) error {
 	if ms.SignatureVersion != signatureVersion {
 		return ErrInvalidSignatureVersion
 	}

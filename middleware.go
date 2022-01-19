@@ -12,7 +12,23 @@ const (
 	XAmzSnsTopicArn    string = "x-amz-sns-topic-arn"
 )
 
-func Middleware(snsTopicARN string) func(http.Handler) http.Handler {
+type client interface {
+	ConfirmSubscription(msg SubscriptionConfirmation) (string, error)
+	ValidateCertURL(certURL string) error
+	CheckSignature(ms MessageSignature) error
+}
+
+type Middleware struct {
+	client client
+}
+
+func NewMiddleware() *Middleware {
+	return &Middleware{
+		client: NewClient(),
+	}
+}
+
+func (m *Middleware) Subscribe(snsTopicARN string) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			topicArn := r.Header.Get(XAmzSnsTopicArn)
@@ -29,15 +45,15 @@ func Middleware(snsTopicARN string) func(http.Handler) http.Handler {
 					http.Error(w, err.Error(), http.StatusBadRequest)
 					return
 				}
-				if err := ValidateCertURL(msg.SigningCertURL); err != nil {
+				if err := m.client.ValidateCertURL(msg.SigningCertURL); err != nil {
 					http.Error(w, err.Error(), http.StatusForbidden)
 					return
 				}
-				if err := CheckSignature(msg.MessageSignature()); err != nil {
+				if err := m.client.CheckSignature(msg.MessageSignature()); err != nil {
 					http.Error(w, err.Error(), http.StatusForbidden)
 					return
 				}
-				body, err := ConfirmSubscription(msg)
+				body, err := m.client.ConfirmSubscription(msg)
 				if err != nil {
 					http.Error(w, err.Error(), http.StatusForbidden)
 					return
@@ -51,11 +67,11 @@ func Middleware(snsTopicARN string) func(http.Handler) http.Handler {
 					http.Error(w, err.Error(), http.StatusBadRequest)
 					return
 				}
-				if err := ValidateCertURL(msg.SigningCertURL); err != nil {
+				if err := m.client.ValidateCertURL(msg.SigningCertURL); err != nil {
 					http.Error(w, err.Error(), http.StatusForbidden)
 					return
 				}
-				if err := CheckSignature(msg.MessageSignature()); err != nil {
+				if err := m.client.CheckSignature(msg.MessageSignature()); err != nil {
 					http.Error(w, err.Error(), http.StatusForbidden)
 					return
 				}

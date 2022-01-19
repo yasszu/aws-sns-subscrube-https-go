@@ -42,7 +42,8 @@ func TestConfirmSubscription(t *testing.T) {
 			defer srv.Close()
 
 			tt.msg.SubscribeURL = srv.URL
-			got, err := ConfirmSubscription(tt.msg)
+			c := NewClient()
+			got, err := c.ConfirmSubscription(tt.msg)
 			if err != tt.err {
 				t.Errorf("err = %v, want %v", err, tt.err)
 			}
@@ -82,7 +83,8 @@ func Test_client_ValidateCertUrl(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			if got := ValidateCertURL(tt.crtURL); got != tt.want {
+			c := NewClient()
+			if got := c.ValidateCertURL(tt.crtURL); got != tt.want {
 				t.Errorf("ValidateCertURL() = %v, want %v", got, tt.want)
 			}
 		})
@@ -324,7 +326,8 @@ func TestCheckSignature(t *testing.T) {
 			defer srv.Close()
 
 			tt.sig.SigningCertURL = srv.URL
-			if got := CheckSignature(tt.sig); got != tt.want {
+			c := NewClient()
+			if got := c.CheckSignature(tt.sig); got != tt.want {
 				t.Errorf("CheckSignature() = %v, want %v", got, tt.want)
 			}
 		})

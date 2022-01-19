@@ -22,7 +22,7 @@ func prepare(t *testing.T) {
 	})
 }
 
-func TestMiddleware_Notification(t *testing.T) {
+func TestMiddleware_Subscribe_Notification(t *testing.T) {
 	prepare(t)
 
 	tests := []struct {
@@ -100,7 +100,8 @@ func TestMiddleware_Notification(t *testing.T) {
 			req.Header.Set(XAmzSnsMessageType, tt.messageType)
 			w := httptest.NewRecorder()
 
-			h := Middleware(tt.topicARN)(http.HandlerFunc(handler))
+			m := NewMiddleware()
+			h := m.Subscribe(tt.topicARN)(http.HandlerFunc(handler))
 			h.ServeHTTP(w, req)
 
 			resp := w.Result()
@@ -111,7 +112,7 @@ func TestMiddleware_Notification(t *testing.T) {
 				}
 				resp.Body.Close()
 
-				t.Errorf("Middleware() = %v: %s, want %v", resp.StatusCode, string(body), tt.wantStatusCode)
+				t.Errorf("Subscribe() = %v: %s, want %v", resp.StatusCode, string(body), tt.wantStatusCode)
 			}
 		})
 	}
