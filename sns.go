@@ -34,7 +34,7 @@ func NewClient() *Client {
 	return &Client{}
 }
 
-func (s *Client) ConfirmSubscription(msg SubscriptionConfirmation) (string, error) {
+func (c *Client) ConfirmSubscription(msg SubscriptionConfirmation) (string, error) {
 	resp, err := http.Get(msg.SubscribeURL)
 	if err != nil {
 		return "", err
@@ -53,7 +53,7 @@ func (s *Client) ConfirmSubscription(msg SubscriptionConfirmation) (string, erro
 	return string(body), nil
 }
 
-func (s *Client) ValidateCertURL(certURL string) error {
+func (c *Client) ValidateCertURL(certURL string) error {
 	u, err := url.Parse(certURL)
 	if err != nil {
 		return ErrInvalidCertURL
@@ -67,7 +67,7 @@ func (s *Client) ValidateCertURL(certURL string) error {
 	return nil
 }
 
-func (s *Client) CheckSignature(ms MessageSignature) error {
+func (c *Client) CheckSignature(ms MessageSignature) error {
 	if ms.SignatureVersion != signatureVersion {
 		return ErrInvalidSignatureVersion
 	}
