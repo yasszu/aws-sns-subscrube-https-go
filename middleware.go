@@ -12,19 +12,19 @@ const (
 	XAmzSnsTopicArn    string = "x-amz-sns-topic-arn"
 )
 
-type client interface {
+type subscriber interface {
 	ConfirmSubscription(msg SubscriptionConfirmation) (string, error)
 	ValidateCertURL(certURL string) error
 	CheckSignature(ms MessageSignature) error
 }
 
 type Middleware struct {
-	client client
+	subscriber subscriber
 }
 
 func NewMiddleware() *Middleware {
 	return &Middleware{
-		client: NewClient(),
+		subscriber: NewClient(),
 	}
 }
 
@@ -45,15 +45,15 @@ func (m *Middleware) Subscribe(snsTopicARN string) func(http.Handler) http.Handl
 					http.Error(w, err.Error(), http.StatusBadRequest)
 					return
 				}
-				if err := m.client.ValidateCertURL(msg.SigningCertURL); err != nil {
+				if err := m.subscriber.ValidateCertURL(msg.SigningCertURL); err != nil {
 					http.Error(w, err.Error(), http.StatusForbidden)
 					return
 				}
-				if err := m.client.CheckSignature(msg.MessageSignature()); err != nil {
+				if err := m.subscriber.CheckSignature(msg.MessageSignature()); err != nil {
 					http.Error(w, err.Error(), http.StatusForbidden)
 					return
 				}
-				body, err := m.client.ConfirmSubscription(msg)
+				body, err := m.subscriber.ConfirmSubscription(msg)
 				if err != nil {
 					http.Error(w, err.Error(), http.StatusForbidden)
 					return
@@ -67,11 +67,11 @@ func (m *Middleware) Subscribe(snsTopicARN string) func(http.Handler) http.Handl
 					http.Error(w, err.Error(), http.StatusBadRequest)
 					return
 				}
-				if err := m.client.ValidateCertURL(msg.SigningCertURL); err != nil {
+				if err := m.subscriber.ValidateCertURL(msg.SigningCertURL); err != nil {
 					http.Error(w, err.Error(), http.StatusForbidden)
 					return
 				}
-				if err := m.client.CheckSignature(msg.MessageSignature()); err != nil {
+				if err := m.subscriber.CheckSignature(msg.MessageSignature()); err != nil {
 					http.Error(w, err.Error(), http.StatusForbidden)
 					return
 				}
