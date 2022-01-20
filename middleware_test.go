@@ -44,13 +44,16 @@ func TestMiddleware_Subscribe_Notification(t *testing.T) {
 			name: "it returns ok",
 			prepare: func() subscriber {
 				c := &mockSubscriber{
-					ExpectConfirmSubscription: func(msg SubscriptionConfirmation) (string, error) {
-						return "", nil
-					},
 					ExpectValidateCertURL: func(certURL string) error {
+						if certURL != "https://sns.us-west-2.amazonaws.com/SimpleNotificationService-f3ecfb7224c7233fe7bb5f59f96de52f.pem" {
+							t.Error("invalid certURL")
+						}
 						return nil
 					},
 					ExpectCheckSignature: func(ms MessageSignature) error {
+						if ms.Signature != "cwMmnINV7NWn5wb4o1faQx9QZBOEpSaJaA86Asdkrpr9C0rdkI/RnyUNl5DrqmueaCiCImuy4Jh0CNeOzqXEdv6WuBjUPbQT/YyAb1h00VVqvjyOvsl2kq+7B3bTfNEahHFZJS2Xh0AtwtWENt159iNnlIRD5NSeVlRyicVv2mgCgK9qxLGGyOFESk43sqUnx5abr0mDR2oFRgbWgwHOly3bQjoaXCfrFYXbmEpz9mMScxoOcRgAUqGVkNLzNBDPU4d9OiBwHxifZBfA6AB3ZxoLm/IZXQJCoK7g44O3NjBCC5nnaMDnHJm1TeSqwVXx8MQQ+8LHhcLbghKkPvo33g==" {
+							t.Error("invalid signature")
+						}
 						return nil
 					},
 				}
@@ -169,6 +172,19 @@ func TestMiddleware_Subscribe_Notification(t *testing.T) {
 func TestMiddleware_Subscribe_SubscriptionConfirmation(t *testing.T) {
 	t.Parallel()
 
+	wantMsg := SubscriptionConfirmation{
+		Type:             "SubscriptionConfirmation",
+		MessageId:        "165545c9-2a5c-472c-8df2-7ff2be2b3b1b",
+		Token:            "Ethevee8dae4mie3",
+		TopicArn:         "arn:aws:sns:us-west-2:123456789012:MyTopic",
+		Message:          "You have chosen to subscribe to the topic arn:aws:sns:us-west-2:123456789012:MyTopic.\nTo confirm the subscription, visit the SubscribeURL included in this message.",
+		SubscribeURL:     "https://sns.us-west-2.amazonaws.com/?Action=ConfirmSubscription&TopicArn=arn:aws:sns:us-west-2:123456789012:MyTopic&Token=Ethevee8dae4mie3",
+		Timestamp:        "2012-04-26T20:45:04.751Z",
+		SignatureVersion: "1",
+		Signature:        "EXAMPLEpH+DcEwjAPg8O9mY8dReBSwksfg2S7WKQcikcNKWLQjwu6A4VbeS0QHVCkhRS7fUQvi2egU3N858fiTDN6bkkOxYDVrY0Ad8L10Hs3zH81mtnPk5uvvolIC1CXGu43obcgFxeL3khZl8IKvO61GWB6jI9b5+gLPoBc1Q=",
+		SigningCertURL:   "https://sns.us-west-2.amazonaws.com/SimpleNotificationService-f3ecfb7224c7233fe7bb5f59f96de52f.pem",
+	}
+
 	tests := []struct {
 		name           string
 		prepare        func() subscriber
@@ -182,12 +198,21 @@ func TestMiddleware_Subscribe_SubscriptionConfirmation(t *testing.T) {
 			prepare: func() subscriber {
 				c := &mockSubscriber{
 					ExpectConfirmSubscription: func(msg SubscriptionConfirmation) (string, error) {
+						if msg != wantMsg {
+							t.Error("invalid msg")
+						}
 						return "success", nil
 					},
 					ExpectValidateCertURL: func(certURL string) error {
+						if certURL != wantMsg.SigningCertURL {
+							t.Error("invalid certURL")
+						}
 						return nil
 					},
 					ExpectCheckSignature: func(ms MessageSignature) error {
+						if ms.Signature != wantMsg.Signature {
+							t.Error("invalid signature")
+						}
 						return nil
 					},
 				}
