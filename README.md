@@ -6,6 +6,10 @@ It used fo subscribing an HTTP/S endpoint to an Amazon SNS topic. Features:
 - Verify the signature of SNS messages
 
 ## Installation
+Install package:
+```
+go get github.com/yasszu/aws-sns-subscrube-https-go
+```
 
 ## Example
 
