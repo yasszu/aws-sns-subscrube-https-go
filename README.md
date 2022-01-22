@@ -24,7 +24,12 @@ import (
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "OK")
+	msg, err := sns.GetNotification(r)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusNotFound)
+	}
+
+	fmt.Fprintf(w, msg.Message)
 }
 
 func main() {
@@ -34,4 +39,5 @@ func main() {
 
 	http.ListenAndServe(":8080", nil)
 }
+
 ```
