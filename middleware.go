@@ -28,9 +28,9 @@ func NewMiddleware() *Middleware {
 	}
 }
 
-func (m *Middleware) Subscribe(snsTopicARN string) func(http.Handler) http.Handler {
-	return func(next http.Handler) http.Handler {
-		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+func (m *Middleware) Subscribe(snsTopicARN string) func(http.HandlerFunc) http.HandlerFunc {
+	return func(next http.HandlerFunc) http.HandlerFunc {
+		return func(w http.ResponseWriter, r *http.Request) {
 			topicArn := r.Header.Get(XAmzSnsTopicArn)
 			if topicArn != snsTopicARN {
 				http.Error(w, "invalid SNS TopicArn", http.StatusForbidden)
@@ -81,7 +81,7 @@ func (m *Middleware) Subscribe(snsTopicARN string) func(http.Handler) http.Handl
 				return
 			}
 
-			next.ServeHTTP(w, r.WithContext(ctx))
-		})
+			next(w, r.WithContext(ctx))
+		}
 	}
 }

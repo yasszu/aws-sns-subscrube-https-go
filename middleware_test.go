@@ -158,7 +158,7 @@ func TestMiddleware_Subscribe_Notification(t *testing.T) {
 			w := httptest.NewRecorder()
 			m := NewMiddleware()
 			m.subscriber = tt.prepare()
-			h := m.Subscribe(tt.topicARN)(http.HandlerFunc(handler))
+			h := m.Subscribe(tt.topicARN)(handler)
 			h.ServeHTTP(w, req)
 
 			resp := w.Result()
@@ -349,7 +349,7 @@ func TestMiddleware_Subscribe_SubscriptionConfirmation(t *testing.T) {
 			w := httptest.NewRecorder()
 			m := NewMiddleware()
 			m.subscriber = tt.prepare()
-			h := m.Subscribe(tt.topicARN)(http.HandlerFunc(handler))
+			h := m.Subscribe(tt.topicARN)(handler)
 			h.ServeHTTP(w, req)
 
 			resp := w.Result()
