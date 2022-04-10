@@ -4,7 +4,6 @@ import (
 	"crypto/x509"
 	"encoding/base64"
 	"encoding/pem"
-	"errors"
 	"io"
 	"net/http"
 	"net/url"
@@ -16,16 +15,6 @@ var (
 	signingCertURLSchema  = "https"
 	signatureVersion      = "1"
 	signatureAlgorithm    = x509.SHA1WithRSA
-)
-
-var (
-	ErrConfirmSubscription     = errors.New("error confirm subscription")
-	ErrInvalidCertURL          = errors.New("error invalid cert url")
-	ErrInvalidCertURLSchema    = errors.New("error invalid cert url scheme")
-	ErrInvalidCertURLHost      = errors.New("error invalid cert url host")
-	ErrInvalidCertBody         = errors.New("error invalid cert body")
-	ErrInvalidSignatureVersion = errors.New("error invalid signature version")
-	ErrInvalidSignature        = errors.New("error invalid signature")
 )
 
 type Client struct{}
